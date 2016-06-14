@@ -27,7 +27,7 @@ def get_by_urlsafe(urlsafe, model):
         key = ndb.Key(urlsafe=urlsafe)
     except TypeError:
         raise endpoints.BadRequestException('Invalid Key')
-    except Exception, e:
+    except Exception as e:
         if e.__class__.__name__ == 'ProtocolBufferDecodeError':
             raise endpoints.BadRequestException('Invalid Key')
         else:
@@ -40,8 +40,9 @@ def get_by_urlsafe(urlsafe, model):
         raise ValueError('Incorrect Kind')
     return entity
 
+
 def get_by_passcode(passcode, model):
-    """Returns an ndb.Model entity that the game passkey points to. 
+    """Returns an ndb.Model entity that the game passkey points to.
     Raises an error if the entity is of the incorrect kind."""
     key = int(passcode.replace("-", ""), 36)
     logging.info(key)
@@ -51,6 +52,7 @@ def get_by_passcode(passcode, model):
     if not isinstance(entity, model):
         raise ValueError('Incorrect Kind')
     return entity
+
 
 def getUserId(user, id_type="oauth"):
     if id_type == "email":
@@ -79,4 +81,3 @@ def getUserId(user, id_type="oauth"):
                 time.sleep(wait)
                 wait = wait + i
         return user.get('user_id', '')
-

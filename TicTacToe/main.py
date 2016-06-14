@@ -12,16 +12,19 @@ from models import User
 
 
 class SendReminderEmail(webapp2.RequestHandler):
+
     def get(self):
-        """Send a reminder email to each User with an email about games.
-        Called every hour using a cron job"""
+        """Send a reminder email to each User with an email and active games.
+        Called every 24 hours using a cron job"""
         app_id = app_identity.get_application_id()
-        users = User.query(User.email != None)
+        users = User.query(
+            User.email is not None and User.gameKeysPlaying is not None)
         for user in users:
             subject = 'This is a reminder!'
-            body = 'Hello {}, try out Guess A Number!'.format(user.name)
-            # This will send test emails, the arguments to send_mail are:
-            # from, to, subject, body
+            body = """Hello {0}, You currently have active games that you are still playing!\n
+                      You are still
+                      playing {1} games.""".format(user.name,
+                                                   len(user.gameKeysPlaying))
             mail.send_mail('noreply@{}.appspotmail.com'.format(app_id),
                            user.email,
                            subject,
@@ -29,6 +32,7 @@ class SendReminderEmail(webapp2.RequestHandler):
 
 
 class UpdateAverageMovesRemaining(webapp2.RequestHandler):
+
     def post(self):
         """Update game listing announcement in memcache."""
         GuessANumberApi._cache_average_attempts()
@@ -37,5 +41,4 @@ class UpdateAverageMovesRemaining(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     ('/crons/send_reminder', SendReminderEmail),
-    ('/tasks/cache_average_attempts', UpdateAverageMovesRemaining),
 ], debug=True)
