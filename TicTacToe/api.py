@@ -1,20 +1,23 @@
 # -*- coding: utf-8 -*-`
-"""api.py - Create and configure the Game API exposing the resources.
-This can also contain game logic. For more complex games it would be wise to
-move game logic to another file. Ideally the API will be simple, concerned
-primarily with communication to/from the API's users."""
+"""api.py - This file is an extendenable API designed to work with
+google app engine. This particular API is for a 2 player game of
+Tic-Tac-Toe. More details on the various endpoints and their
+expected parameters can be found in README.md"""
 
 
 import logging
 import endpoints
 from protorpc import remote, messages
-from google.appengine.api import memcache
-from google.appengine.api import taskqueue
 from google.appengine.ext import ndb
-from models.game import Game, NewGameForm, GameForm, MakeMoveForm,\
-                        JoinGameForm, GameForms, GameHistoryForm
+from models.game import (Game,
+                         NewGameForm,
+                         GameForm,
+                         MakeMoveForm,
+                         JoinGameForm,
+                         GameForms,
+                         GameHistoryForm)
 from models.user import User, StringMessage, LeaderboardForms
-from utils import get_by_urlsafe, get_by_passcode, getUserId
+from utils import get_by_urlsafe, get_by_passcode
 """If the request contains path or querystring arguments, you
 cannot use a simple Message class. Instead, you must use a
 ResourceContaineClass."""
@@ -56,7 +59,6 @@ class TicTacToeApi(remote.Service):
                       http_method='GET')
     def get_user_rankings(self, request):
         """Return rankings for all users."""
-        current_user = self._getUser()
         users = User.query()
         return LeaderboardForms(items=[user.to_form()
                                        for user in users])
@@ -150,7 +152,6 @@ class TicTacToeApi(remote.Service):
                       http_method='GET')
     def get_game_history(self, request):
         """Return the move history of a game."""
-        current_user = self._getUser()
         game = get_by_urlsafe(request.urlsafe_game_key, Game)
         return GameHistoryForm(moves=game.history)
 

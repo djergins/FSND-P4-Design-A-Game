@@ -1,7 +1,5 @@
-import random
 import logging
 import endpoints
-from datetime import date
 from protorpc import messages
 from google.appengine.ext import ndb
 from models.user import User
@@ -41,7 +39,7 @@ class Game(ndb.Model):
         """Change ``num'' to given base
         Upto base 36 is supported."""
 
-        converted_string, modstring = "", ""
+        converted_string = "", ""
         currentnum = num
         if not 1 < base < 37:
             raise ValueError("base must be between 2 and 36")
@@ -198,10 +196,10 @@ class Game(ndb.Model):
         if self.game_over:
             raise endpoints.ConflictException('Game already over!')
         if self.isPlayer1_turn and current_user.name == \
-            self.player1.get().name:
+                self.player1.get().name:
             move = player1_number
         elif self.isPlayer1_turn is False and current_user.name == \
-            self.player2.get().name:
+                self.player2.get().name:
             move = player2_number
         else:
             raise endpoints.ConflictException(

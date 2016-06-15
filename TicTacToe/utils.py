@@ -6,7 +6,6 @@ from google.appengine.api import urlfetch
 import endpoints
 import os
 import time
-import uuid
 import json
 
 

@@ -1,6 +1,3 @@
-import random
-import logging
-from datetime import date
 from protorpc import messages
 from google.appengine.ext import ndb
 

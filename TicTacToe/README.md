@@ -13,7 +13,7 @@
 ##Game Description:
 Tic-Tac-Toe is a two player game. This game is won by one of the players successfully filling a sequence of 3 tiles with their symbol, an X or an O. Victory can be achieved horizontally, vertically, and diagonally on the 3x3 game grid. Thus the goal is to fill 3 tiles in a row with your symbol while blocking the other player from filling their 3 tiles in a row. Moves are sent to the 'make_move' enpoint which will check for a winner each round and reply with the following:
 "Game Over! The winner is: " + winner, "Draw Game!", or "Move Made! Next player's move!" If a move does not produce a winner or a draw game, it will be the next player's turn. Many different Tic-Tac-Toe games can be played by many different Users at any
-given time. Each game can be retrieved or played by using the path parameter `urlsafe_game_key`.
+given time. Each game can be retrieved or played by using the path parameter `urlsafe_game_key`. Score is tracked by each user's win, loss, and draw records. At the end of a game, each user's record is updated accordingly. If a player won, a win is incremented to the User object. If a player lost, a loss is incremented to the User object. If neither player won due to a full board, then both player's records will have a draw incremented by one. All users' rankings can be accessed via the get_user_rankings api endpoint.
 
 ##Files Included:
  - api.py: Contains endpoints and game playing logic.
